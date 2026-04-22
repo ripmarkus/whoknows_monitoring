@@ -58,12 +58,13 @@ sudo ufw allow from 65.109.162.80 to any port 9100 proto tcp
 
 ## GitHub Secrets
 
-| Secret                  | What                                     |
-|-------------------------|------------------------------------------|
-| `SSH_KEY`               | Private key authorised on both servers   |
-| `SERVER_USER`           | SSH user (same on both)                  |
-| `MONITORING_SERVER_IP`  | `65.109.162.80`                          |
-| `APP_SERVER_IP`         | `91.100.1.101`                           |
+| Secret                   | What                                                  |
+|--------------------------|-------------------------------------------------------|
+| `SSH_KEY`                | Private key authorised on both servers                |
+| `MONITORING_SERVER_USER` | SSH user on monitoring server (e.g. `vss`)            |
+| `MONITORING_SERVER_IP`   | `65.109.162.80` (SSH port 2806, hardcoded in workflow)|
+| `APP_SERVER_USER`        | SSH user on app server (e.g. `riphjalte`)             |
+| `APP_SERVER_IP`          | `91.100.1.101`                                        |
 
 ## Prerequisite: app `/metrics` endpoint
 

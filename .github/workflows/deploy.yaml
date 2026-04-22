@@ -19,7 +19,7 @@ jobs:
       - name: Deploy monitoring stack
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p 2806 \
-            "${{ secrets.SERVER_USER }}@${{ secrets.MONITORING_SERVER_IP }}" <<'EOF'
+            "${{ secrets.MONITORING_SERVER_USER }}@${{ secrets.MONITORING_SERVER_IP }}" <<'EOF'
           set -eux
           cd /opt/docker/devops/whoknows_monitoring
           git pull
@@ -42,7 +42,7 @@ jobs:
       - name: Deploy node_exporter on app server
         run: |
           ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
-            "${{ secrets.SERVER_USER }}@${{ secrets.APP_SERVER_IP }}" <<'EOF'
+            "${{ secrets.APP_SERVER_USER }}@${{ secrets.APP_SERVER_IP }}" <<'EOF'
           set -eux
           cd /opt/docker/devops/whoknows_monitoring/exporters
           git pull
