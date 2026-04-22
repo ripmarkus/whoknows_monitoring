@@ -18,7 +18,7 @@ jobs:
 
       - name: Deploy monitoring stack
         run: |
-          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no \
+          ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no -p 2806 \
             "${{ secrets.SERVER_USER }}@${{ secrets.MONITORING_SERVER_IP }}" <<'EOF'
           set -eux
           cd /opt/docker/devops/whoknows_monitoring
