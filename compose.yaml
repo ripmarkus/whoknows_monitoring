@@ -24,7 +24,7 @@ services:
       - ./grafana/provisioning/dashboards-json:/var/lib/grafana/dashboards:ro
       - grafana_data:/var/lib/grafana
     ports:
-      - "3000:3000"
+      - "443:443"
     depends_on:
       - prometheus
 
