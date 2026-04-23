@@ -1,0 +1,215 @@
+{
+  "title": "Home Observability",
+  "uid": "home-observability",
+  "timezone": "browser",
+  "refresh": "30s",
+  "time": { "from": "now-1h", "to": "now" },
+  "templating": { "list": [] },
+  "annotations": { "list": [] },
+  "panels": [
+
+    { "id": 100, "type": "text", "title": "", "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
+      "options": { "mode": "markdown", "content": "## HTTP" } },
+
+    {
+      "id": 1, "type": "stat", "title": "Request Rate",
+      "gridPos": { "x": 0, "y": 1, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "sum(rate(http_requests_total[5m]))", "legendFormat": "req/s" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
+      "fieldConfig": { "defaults": { "unit": "reqps", "color": { "mode": "fixed", "fixedColor": "blue" } } }
+    },
+    {
+      "id": 2, "type": "stat", "title": "Error Rate",
+      "gridPos": { "x": 4, "y": 1, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "sum(rate(http_request_errors_total[5m]))", "legendFormat": "err/s" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
+      "fieldConfig": { "defaults": { "unit": "reqps", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 0.01 }] } } }
+    },
+    {
+      "id": 3, "type": "stat", "title": "P95 Latency",
+      "gridPos": { "x": 8, "y": 1, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "histogram_quantile(0.95, sum by(le) (rate(http_request_duration_seconds_bucket[5m])))", "legendFormat": "p95" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "s", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.25 }, { "color": "red", "value": 1 }] } } }
+    },
+    {
+      "id": 4, "type": "stat", "title": "Success Rate",
+      "gridPos": { "x": 12, "y": 1, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "100 * sum(rate(http_requests_total{status_code=~\"2..\"}[5m])) / sum(rate(http_requests_total[5m]))", "legendFormat": "%" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 90 }, { "color": "green", "value": 99 }] } } }
+    },
+    {
+      "id": 5, "type": "timeseries", "title": "Request Rate vs Errors",
+      "gridPos": { "x": 16, "y": 1, "w": 8, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [
+        { "expr": "sum(rate(http_requests_total[1m]))", "legendFormat": "requests" },
+        { "expr": "sum(rate(http_request_errors_total[1m]))", "legendFormat": "errors" }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 } },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "errors" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } }] }
+        ]
+      },
+      "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "list", "placement": "bottom" } }
+    },
+
+    { "id": 101, "type": "text", "title": "", "gridPos": { "x": 0, "y": 5, "w": 24, "h": 1 },
+      "options": { "mode": "markdown", "content": "## Users" } },
+
+    {
+      "id": 10, "type": "stat", "title": "Logins (5m)",
+      "gridPos": { "x": 0, "y": 6, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "sum(increase(login_attempts_total{result=\"success\"}[5m]))", "legendFormat": "logins" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "fixed", "fixedColor": "green" } } }
+    },
+    {
+      "id": 11, "type": "stat", "title": "Failed Logins (5m)",
+      "gridPos": { "x": 4, "y": 6, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "sum(increase(login_attempts_total{result=\"failure\"}[5m]))", "legendFormat": "failures" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 20 }] } } }
+    },
+    {
+      "id": 12, "type": "stat", "title": "Registrations (5m)",
+      "gridPos": { "x": 8, "y": 6, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "sum(increase(registrations_total{result=\"success\"}[5m]))", "legendFormat": "registrations" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "fixed", "fixedColor": "blue" } } }
+    },
+    {
+      "id": 13, "type": "stat", "title": "Password Changes (5m)",
+      "gridPos": { "x": 12, "y": 6, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "sum(increase(password_changes_total{result=\"success\"}[5m]))", "legendFormat": "changes" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "fixed", "fixedColor": "purple" } } }
+    },
+    {
+      "id": 14, "type": "timeseries", "title": "Login Success vs Failure",
+      "gridPos": { "x": 16, "y": 6, "w": 8, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [
+        { "expr": "sum by(result) (rate(login_attempts_total[1m]))", "legendFormat": "{{result}}" }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 } },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "success" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } }] },
+          { "matcher": { "id": "byName", "options": "failure" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } }] }
+        ]
+      },
+      "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "list", "placement": "bottom" } }
+    },
+
+    { "id": 102, "type": "text", "title": "", "gridPos": { "x": 0, "y": 10, "w": 24, "h": 1 },
+      "options": { "mode": "markdown", "content": "## Search" } },
+
+    {
+      "id": 20, "type": "stat", "title": "Searches (5m)",
+      "gridPos": { "x": 0, "y": 11, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "sum(increase(search_queries_total[5m]))", "legendFormat": "searches" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "fixed", "fixedColor": "blue" } } }
+    },
+    {
+      "id": 21, "type": "stat", "title": "Hit Rate %",
+      "gridPos": { "x": 4, "y": 11, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "100 * sum(increase(search_queries_total{hit=\"hit\"}[5m])) / sum(increase(search_queries_total[5m]))", "legendFormat": "hit %" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 30 }, { "color": "green", "value": 60 }] } } }
+    },
+    {
+      "id": 22, "type": "stat", "title": "P95 Search Latency",
+      "gridPos": { "x": 8, "y": 11, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "histogram_quantile(0.95, sum by(le) (rate(search_duration_seconds_bucket[5m])))", "legendFormat": "p95" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "s", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.1 }, { "color": "red", "value": 0.5 }] } } }
+    },
+    {
+      "id": 23, "type": "stat", "title": "Miss Count (5m)",
+      "gridPos": { "x": 12, "y": 11, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "sum(increase(search_queries_total{hit=\"miss\"}[5m]))", "legendFormat": "misses" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 10 }, { "color": "red", "value": 50 }] } } }
+    },
+    {
+      "id": 24, "type": "timeseries", "title": "Search Hit vs Miss Rate",
+      "gridPos": { "x": 16, "y": 11, "w": 8, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [
+        { "expr": "sum by(hit) (rate(search_queries_total[1m]))", "legendFormat": "{{hit}}" }
+      ],
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 } },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "hit" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } }] },
+          { "matcher": { "id": "byName", "options": "miss" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } }] }
+        ]
+      },
+      "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "list", "placement": "bottom" } }
+    },
+
+    { "id": 103, "type": "text", "title": "", "gridPos": { "x": 0, "y": 15, "w": 24, "h": 1 },
+      "options": { "mode": "markdown", "content": "## Weather API" } },
+
+    {
+      "id": 30, "type": "stat", "title": "API Calls (5m)",
+      "gridPos": { "x": 0, "y": 16, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "sum(increase(weather_api_requests_total[5m]))", "legendFormat": "calls" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "fixed", "fixedColor": "blue" } } }
+    },
+    {
+      "id": 31, "type": "stat", "title": "API Errors (5m)",
+      "gridPos": { "x": 4, "y": 16, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "sum(increase(weather_api_errors_total[5m]))", "legendFormat": "errors" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] } } }
+    },
+    {
+      "id": 32, "type": "stat", "title": "Geocoding P95",
+      "gridPos": { "x": 8, "y": 16, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "histogram_quantile(0.95, sum by(le) (rate(weather_api_duration_seconds_bucket{phase=\"geocoding\"}[5m])))", "legendFormat": "p95" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "s", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.5 }, { "color": "red", "value": 2 }] } } }
+    },
+    {
+      "id": 33, "type": "stat", "title": "Weather Fetch P95",
+      "gridPos": { "x": 12, "y": 16, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "histogram_quantile(0.95, sum by(le) (rate(weather_api_duration_seconds_bucket{phase=\"weather\"}[5m])))", "legendFormat": "p95" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "s", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.5 }, { "color": "red", "value": 2 }] } } }
+    },
+    {
+      "id": 34, "type": "timeseries", "title": "Weather API Rate by Phase",
+      "gridPos": { "x": 16, "y": 16, "w": 8, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [
+        { "expr": "sum by(phase) (rate(weather_api_requests_total[1m]))", "legendFormat": "{{phase}}" }
+      ],
+      "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 } } },
+      "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "list", "placement": "bottom" } }
+    }
+
+  ],
+  "schemaVersion": 39
+}
