@@ -6,207 +6,299 @@
   "time": { "from": "now-1h", "to": "now" },
   "templating": { "list": [] },
   "annotations": { "list": [] },
+  "links": [
+    {
+      "title": "HTTP Observability",
+      "type": "link",
+      "url": "/d/http-observability",
+      "icon": "bolt",
+      "tooltip": "HTTP requests, errors and latency",
+      "targetBlank": false,
+      "keepTime": true,
+      "includeVars": false
+    },
+    {
+      "title": "User Observability",
+      "type": "link",
+      "url": "/d/user-observability",
+      "icon": "user",
+      "tooltip": "Logins, registrations and password changes",
+      "targetBlank": false,
+      "keepTime": true,
+      "includeVars": false
+    },
+    {
+      "title": "Search Observability",
+      "type": "link",
+      "url": "/d/search-observability",
+      "icon": "search",
+      "tooltip": "Search queries, hit rate and latency",
+      "targetBlank": false,
+      "keepTime": true,
+      "includeVars": false
+    },
+    {
+      "title": "Weather Observability",
+      "type": "link",
+      "url": "/d/weather-observability",
+      "icon": "cloud",
+      "tooltip": "OpenWeather API calls, errors and latency",
+      "targetBlank": false,
+      "keepTime": true,
+      "includeVars": false
+    }
+  ],
   "panels": [
 
-    { "id": 100, "type": "text", "title": "", "gridPos": { "x": 0, "y": 0, "w": 24, "h": 1 },
-      "options": { "mode": "markdown", "content": "## HTTP" } },
+    {
+      "id": 99,
+      "type": "text",
+      "title": "",
+      "gridPos": { "x": 0, "y": 0, "w": 24, "h": 3 },
+      "options": {
+        "mode": "html",
+        "content": "<div style=\"display:flex; align-items:center; justify-content:space-between; padding: 8px 16px; background: linear-gradient(90deg, #1a1d23 0%, #22262f 100%); border-radius: 8px; border-left: 4px solid #5794F2;\">\n  <div>\n    <div style=\"font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: 0.5px;\">Application Overview</div>\n    <div style=\"font-size: 13px; color: #8e9bb5; margin-top: 3px;\">Live snapshot across HTTP, Users, Search and Weather — updated every 30 s</div>\n  </div>\n  <div style=\"display:flex; gap:10px;\">\n    <a href=\"/d/http-observability\" style=\"text-decoration:none; padding: 7px 14px; background:#1f60c4; color:#fff; border-radius:5px; font-size:13px; font-weight:600;\">⚡ HTTP</a>\n    <a href=\"/d/user-observability\" style=\"text-decoration:none; padding: 7px 14px; background:#3d6b47; color:#fff; border-radius:5px; font-size:13px; font-weight:600;\">👤 Users</a>\n    <a href=\"/d/search-observability\" style=\"text-decoration:none; padding: 7px 14px; background:#7b5ea7; color:#fff; border-radius:5px; font-size:13px; font-weight:600;\">🔍 Search</a>\n    <a href=\"/d/weather-observability\" style=\"text-decoration:none; padding: 7px 14px; background:#8c5e1e; color:#fff; border-radius:5px; font-size:13px; font-weight:600;\">🌤 Weather</a>\n  </div>\n</div>"
+      }
+    },
+
+    {
+      "id": 100,
+      "type": "text",
+      "title": "",
+      "gridPos": { "x": 0, "y": 3, "w": 24, "h": 2 },
+      "options": {
+        "mode": "html",
+        "content": "<div style=\"display:flex; align-items:center; gap:10px; padding: 2px 4px;\">\n  <div style=\"width:4px; height:18px; background:#5794F2; border-radius:2px;\"></div>\n  <span style=\"font-size:14px; font-weight:700; color:#5794F2; letter-spacing:1px; text-transform:uppercase;\">HTTP</span>\n  <div style=\"flex:1; height:1px; background:rgba(87,148,242,0.2);\"></div>\n  <a href=\"/d/http-observability\" style=\"font-size:11px; color:#5794F2; text-decoration:none;\">View full dashboard →</a>\n</div>"
+      }
+    },
 
     {
       "id": 1, "type": "stat", "title": "Request Rate",
-      "gridPos": { "x": 0, "y": 1, "w": 4, "h": 4 },
+      "gridPos": { "x": 0, "y": 4, "w": 4, "h": 4 },
       "datasource": "Prometheus",
       "targets": [{ "expr": "sum(rate(http_requests_total[5m]))", "legendFormat": "req/s" }],
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
-      "fieldConfig": { "defaults": { "unit": "reqps", "color": { "mode": "fixed", "fixedColor": "blue" } } }
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area", "text": {} },
+      "fieldConfig": { "defaults": { "unit": "reqps", "color": { "mode": "fixed", "fixedColor": "#5794F2" }, "noValue": "0" } }
     },
     {
-      "id": 2, "type": "stat", "title": "Error Rate",
-      "gridPos": { "x": 4, "y": 1, "w": 4, "h": 4 },
-      "datasource": "Prometheus",
-      "targets": [{ "expr": "sum(rate(http_request_errors_total[5m]))", "legendFormat": "err/s" }],
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
-      "fieldConfig": { "defaults": { "unit": "reqps", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 0.01 }] } } }
-    },
-    {
-      "id": 3, "type": "stat", "title": "P95 Latency",
-      "gridPos": { "x": 8, "y": 1, "w": 4, "h": 4 },
-      "datasource": "Prometheus",
-      "targets": [{ "expr": "histogram_quantile(0.95, sum by(le) (rate(http_request_duration_seconds_bucket[5m])))", "legendFormat": "p95" }],
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "s", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.25 }, { "color": "red", "value": 1 }] } } }
-    },
-    {
-      "id": 4, "type": "stat", "title": "Success Rate",
-      "gridPos": { "x": 12, "y": 1, "w": 4, "h": 4 },
+      "id": 2, "type": "stat", "title": "Success Rate",
+      "gridPos": { "x": 4, "y": 4, "w": 4, "h": 4 },
       "datasource": "Prometheus",
       "targets": [{ "expr": "100 * sum(rate(http_requests_total{status_code=~\"2..\"}[5m])) / sum(rate(http_requests_total[5m]))", "legendFormat": "%" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 90 }, { "color": "green", "value": 99 }] } } }
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "noValue": "—", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 90 }, { "color": "green", "value": 99 }] } } }
     },
     {
-      "id": 5, "type": "timeseries", "title": "Request Rate vs Errors",
-      "gridPos": { "x": 16, "y": 1, "w": 8, "h": 4 },
+      "id": 3, "type": "stat", "title": "P95 Latency",
+      "gridPos": { "x": 8, "y": 4, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "histogram_quantile(0.95, sum by(le) (rate(http_request_duration_seconds_bucket[5m])))", "legendFormat": "p95" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "s", "noValue": "—", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.25 }, { "color": "red", "value": 1 }] } } }
+    },
+    {
+      "id": 4, "type": "stat", "title": "Errors (5m)",
+      "gridPos": { "x": 12, "y": 4, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "sum(increase(http_request_errors_total[5m]))", "legendFormat": "errors" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] } } }
+    },
+    {
+      "id": 5, "type": "timeseries", "title": "Requests & Errors",
+      "gridPos": { "x": 16, "y": 4, "w": 8, "h": 4 },
       "datasource": "Prometheus",
       "targets": [
         { "expr": "sum(rate(http_requests_total[1m]))", "legendFormat": "requests" },
         { "expr": "sum(rate(http_request_errors_total[1m]))", "legendFormat": "errors" }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 } },
+        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2, "fillOpacity": 8 } },
         "overrides": [
-          { "matcher": { "id": "byName", "options": "errors" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } }] }
+          { "matcher": { "id": "byName", "options": "errors" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } }] },
+          { "matcher": { "id": "byName", "options": "requests" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#5794F2" } }] }
         ]
       },
       "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "list", "placement": "bottom" } }
     },
 
-    { "id": 101, "type": "text", "title": "", "gridPos": { "x": 0, "y": 5, "w": 24, "h": 1 },
-      "options": { "mode": "markdown", "content": "## Users" } },
+    {
+      "id": 101,
+      "type": "text",
+      "title": "",
+      "gridPos": { "x": 0, "y": 8, "w": 24, "h": 1 },
+      "options": {
+        "mode": "html",
+        "content": "<div style=\"display:flex; align-items:center; gap:10px; padding: 2px 4px;\">\n  <div style=\"width:4px; height:18px; background:#73BF69; border-radius:2px;\"></div>\n  <span style=\"font-size:14px; font-weight:700; color:#73BF69; letter-spacing:1px; text-transform:uppercase;\">Users</span>\n  <div style=\"flex:1; height:1px; background:rgba(115,191,105,0.2);\"></div>\n  <a href=\"/d/user-observability\" style=\"font-size:11px; color:#73BF69; text-decoration:none;\">View full dashboard →</a>\n</div>"
+      }
+    },
 
     {
-      "id": 10, "type": "stat", "title": "Logins (5m)",
-      "gridPos": { "x": 0, "y": 6, "w": 4, "h": 4 },
+      "id": 10, "type": "stat", "title": "Successful Logins (5m)",
+      "gridPos": { "x": 0, "y": 9, "w": 4, "h": 4 },
       "datasource": "Prometheus",
       "targets": [{ "expr": "sum(increase(login_attempts_total{result=\"success\"}[5m]))", "legendFormat": "logins" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "fixed", "fixedColor": "green" } } }
+      "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "fixed", "fixedColor": "#73BF69" } } }
     },
     {
       "id": 11, "type": "stat", "title": "Failed Logins (5m)",
-      "gridPos": { "x": 4, "y": 6, "w": 4, "h": 4 },
+      "gridPos": { "x": 4, "y": 9, "w": 4, "h": 4 },
       "datasource": "Prometheus",
       "targets": [{ "expr": "sum(increase(login_attempts_total{result=\"failure\"}[5m]))", "legendFormat": "failures" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 20 }] } } }
+      "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 20 }] } } }
     },
     {
       "id": 12, "type": "stat", "title": "Registrations (5m)",
-      "gridPos": { "x": 8, "y": 6, "w": 4, "h": 4 },
+      "gridPos": { "x": 8, "y": 9, "w": 4, "h": 4 },
       "datasource": "Prometheus",
       "targets": [{ "expr": "sum(increase(registrations_total{result=\"success\"}[5m]))", "legendFormat": "registrations" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "fixed", "fixedColor": "blue" } } }
+      "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "fixed", "fixedColor": "#5794F2" } } }
     },
     {
       "id": 13, "type": "stat", "title": "Password Changes (5m)",
-      "gridPos": { "x": 12, "y": 6, "w": 4, "h": 4 },
+      "gridPos": { "x": 12, "y": 9, "w": 4, "h": 4 },
       "datasource": "Prometheus",
-      "targets": [{ "expr": "sum(increase(password_changes_total{result=\"success\"}[5m]))", "legendFormat": "changes" }],
+      "targets": [{ "expr": "sum(increase(password_changes_total[5m]))", "legendFormat": "changes" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "fixed", "fixedColor": "purple" } } }
+      "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "fixed", "fixedColor": "#B877D9" } } }
     },
     {
       "id": 14, "type": "timeseries", "title": "Login Success vs Failure",
-      "gridPos": { "x": 16, "y": 6, "w": 8, "h": 4 },
+      "gridPos": { "x": 16, "y": 9, "w": 8, "h": 4 },
       "datasource": "Prometheus",
       "targets": [
         { "expr": "sum by(result) (rate(login_attempts_total[1m]))", "legendFormat": "{{result}}" }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 } },
+        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2, "fillOpacity": 8 } },
         "overrides": [
-          { "matcher": { "id": "byName", "options": "success" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } }] },
+          { "matcher": { "id": "byName", "options": "success" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#73BF69" } }] },
           { "matcher": { "id": "byName", "options": "failure" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } }] }
         ]
       },
       "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "list", "placement": "bottom" } }
     },
 
-    { "id": 102, "type": "text", "title": "", "gridPos": { "x": 0, "y": 10, "w": 24, "h": 1 },
-      "options": { "mode": "markdown", "content": "## Search" } },
+    {
+      "id": 102,
+      "type": "text",
+      "title": "",
+      "gridPos": { "x": 0, "y": 13, "w": 24, "h": 1 },
+      "options": {
+        "mode": "html",
+        "content": "<div style=\"display:flex; align-items:center; gap:10px; padding: 2px 4px;\">\n  <div style=\"width:4px; height:18px; background:#B877D9; border-radius:2px;\"></div>\n  <span style=\"font-size:14px; font-weight:700; color:#B877D9; letter-spacing:1px; text-transform:uppercase;\">Search</span>\n  <div style=\"flex:1; height:1px; background:rgba(184,119,217,0.2);\"></div>\n  <a href=\"/d/search-observability\" style=\"font-size:11px; color:#B877D9; text-decoration:none;\">View full dashboard →</a>\n</div>"
+      }
+    },
 
     {
       "id": 20, "type": "stat", "title": "Searches (5m)",
-      "gridPos": { "x": 0, "y": 11, "w": 4, "h": 4 },
+      "gridPos": { "x": 0, "y": 14, "w": 4, "h": 4 },
       "datasource": "Prometheus",
       "targets": [{ "expr": "sum(increase(search_queries_total[5m]))", "legendFormat": "searches" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "fixed", "fixedColor": "blue" } } }
+      "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "fixed", "fixedColor": "#B877D9" } } }
     },
     {
-      "id": 21, "type": "stat", "title": "Hit Rate %",
-      "gridPos": { "x": 4, "y": 11, "w": 4, "h": 4 },
+      "id": 21, "type": "stat", "title": "Hit Rate",
+      "gridPos": { "x": 4, "y": 14, "w": 4, "h": 4 },
       "datasource": "Prometheus",
       "targets": [{ "expr": "100 * sum(increase(search_queries_total{hit=\"hit\"}[5m])) / sum(increase(search_queries_total[5m]))", "legendFormat": "hit %" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 30 }, { "color": "green", "value": 60 }] } } }
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "noValue": "—", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 30 }, { "color": "green", "value": 60 }] } } }
     },
     {
-      "id": 22, "type": "stat", "title": "P95 Search Latency",
-      "gridPos": { "x": 8, "y": 11, "w": 4, "h": 4 },
+      "id": 22, "type": "stat", "title": "P95 Latency",
+      "gridPos": { "x": 8, "y": 14, "w": 4, "h": 4 },
       "datasource": "Prometheus",
       "targets": [{ "expr": "histogram_quantile(0.95, sum by(le) (rate(search_duration_seconds_bucket[5m])))", "legendFormat": "p95" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "s", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.1 }, { "color": "red", "value": 0.5 }] } } }
+      "fieldConfig": { "defaults": { "unit": "s", "noValue": "—", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.1 }, { "color": "red", "value": 0.5 }] } } }
     },
     {
-      "id": 23, "type": "stat", "title": "Miss Count (5m)",
-      "gridPos": { "x": 12, "y": 11, "w": 4, "h": 4 },
+      "id": 23, "type": "stat", "title": "Misses (5m)",
+      "gridPos": { "x": 12, "y": 14, "w": 4, "h": 4 },
       "datasource": "Prometheus",
       "targets": [{ "expr": "sum(increase(search_queries_total{hit=\"miss\"}[5m]))", "legendFormat": "misses" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 10 }, { "color": "red", "value": 50 }] } } }
+      "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 10 }, { "color": "red", "value": 50 }] } } }
     },
     {
-      "id": 24, "type": "timeseries", "title": "Search Hit vs Miss Rate",
-      "gridPos": { "x": 16, "y": 11, "w": 8, "h": 4 },
+      "id": 24, "type": "timeseries", "title": "Search Hit vs Miss",
+      "gridPos": { "x": 16, "y": 14, "w": 8, "h": 4 },
       "datasource": "Prometheus",
       "targets": [
         { "expr": "sum by(hit) (rate(search_queries_total[1m]))", "legendFormat": "{{hit}}" }
       ],
       "fieldConfig": {
-        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 } },
+        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2, "fillOpacity": 8 } },
         "overrides": [
-          { "matcher": { "id": "byName", "options": "hit" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "green" } }] },
-          { "matcher": { "id": "byName", "options": "miss" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "orange" } }] }
+          { "matcher": { "id": "byName", "options": "hit" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#73BF69" } }] },
+          { "matcher": { "id": "byName", "options": "miss" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#FF9830" } }] }
         ]
       },
       "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "list", "placement": "bottom" } }
     },
 
-    { "id": 103, "type": "text", "title": "", "gridPos": { "x": 0, "y": 15, "w": 24, "h": 1 },
-      "options": { "mode": "markdown", "content": "## Weather API" } },
+    {
+      "id": 103,
+      "type": "text",
+      "title": "",
+      "gridPos": { "x": 0, "y": 18, "w": 24, "h": 1 },
+      "options": {
+        "mode": "html",
+        "content": "<div style=\"display:flex; align-items:center; gap:10px; padding: 2px 4px;\">\n  <div style=\"width:4px; height:18px; background:#FF9830; border-radius:2px;\"></div>\n  <span style=\"font-size:14px; font-weight:700; color:#FF9830; letter-spacing:1px; text-transform:uppercase;\">Weather API</span>\n  <div style=\"flex:1; height:1px; background:rgba(255,152,48,0.2);\"></div>\n  <a href=\"/d/weather-observability\" style=\"font-size:11px; color:#FF9830; text-decoration:none;\">View full dashboard →</a>\n</div>"
+      }
+    },
 
     {
       "id": 30, "type": "stat", "title": "API Calls (5m)",
-      "gridPos": { "x": 0, "y": 16, "w": 4, "h": 4 },
+      "gridPos": { "x": 0, "y": 19, "w": 4, "h": 4 },
       "datasource": "Prometheus",
       "targets": [{ "expr": "sum(increase(weather_api_requests_total[5m]))", "legendFormat": "calls" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "fixed", "fixedColor": "blue" } } }
+      "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "fixed", "fixedColor": "#FF9830" } } }
     },
     {
       "id": 31, "type": "stat", "title": "API Errors (5m)",
-      "gridPos": { "x": 4, "y": 16, "w": 4, "h": 4 },
+      "gridPos": { "x": 4, "y": 19, "w": 4, "h": 4 },
       "datasource": "Prometheus",
       "targets": [{ "expr": "sum(increase(weather_api_errors_total[5m]))", "legendFormat": "errors" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "short", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] } } }
+      "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 1 }] } } }
     },
     {
       "id": 32, "type": "stat", "title": "Geocoding P95",
-      "gridPos": { "x": 8, "y": 16, "w": 4, "h": 4 },
+      "gridPos": { "x": 8, "y": 19, "w": 4, "h": 4 },
       "datasource": "Prometheus",
       "targets": [{ "expr": "histogram_quantile(0.95, sum by(le) (rate(weather_api_duration_seconds_bucket{phase=\"geocoding\"}[5m])))", "legendFormat": "p95" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "s", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.5 }, { "color": "red", "value": 2 }] } } }
+      "fieldConfig": { "defaults": { "unit": "s", "noValue": "—", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.5 }, { "color": "red", "value": 2 }] } } }
     },
     {
       "id": 33, "type": "stat", "title": "Weather Fetch P95",
-      "gridPos": { "x": 12, "y": 16, "w": 4, "h": 4 },
+      "gridPos": { "x": 12, "y": 19, "w": 4, "h": 4 },
       "datasource": "Prometheus",
       "targets": [{ "expr": "histogram_quantile(0.95, sum by(le) (rate(weather_api_duration_seconds_bucket{phase=\"weather\"}[5m])))", "legendFormat": "p95" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "s", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.5 }, { "color": "red", "value": 2 }] } } }
+      "fieldConfig": { "defaults": { "unit": "s", "noValue": "—", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.5 }, { "color": "red", "value": 2 }] } } }
     },
     {
-      "id": 34, "type": "timeseries", "title": "Weather API Rate by Phase",
-      "gridPos": { "x": 16, "y": 16, "w": 8, "h": 4 },
+      "id": 34, "type": "timeseries", "title": "API Rate by Phase",
+      "gridPos": { "x": 16, "y": 19, "w": 8, "h": 4 },
       "datasource": "Prometheus",
       "targets": [
         { "expr": "sum by(phase) (rate(weather_api_requests_total[1m]))", "legendFormat": "{{phase}}" }
       ],
-      "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 } } },
+      "fieldConfig": {
+        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2, "fillOpacity": 8 } },
+        "overrides": [
+          { "matcher": { "id": "byName", "options": "geocoding" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#FF9830" } }] },
+          { "matcher": { "id": "byName", "options": "weather" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#FADE2A" } }] }
+        ]
+      },
       "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "list", "placement": "bottom" } }
     }
 
