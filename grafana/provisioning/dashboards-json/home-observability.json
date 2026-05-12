@@ -18,21 +18,21 @@
       "includeVars": false
     },
     {
-      "title": "User Observability",
+      "title": "Business Observability",
       "type": "link",
-      "url": "/d/user-observability",
-      "icon": "user",
-      "tooltip": "Logins, registrations and password changes",
+      "url": "/d/business-observability",
+      "icon": "trending-up",
+      "tooltip": "Logins, registrations, searches and keywords",
       "targetBlank": false,
       "keepTime": true,
       "includeVars": false
     },
     {
-      "title": "Search Observability",
+      "title": "Security Observability",
       "type": "link",
-      "url": "/d/search-observability",
-      "icon": "search",
-      "tooltip": "Search queries, hit rate and latency",
+      "url": "/d/security-observability",
+      "icon": "shield",
+      "tooltip": "Failed logins, auth errors and anomalies",
       "targetBlank": false,
       "keepTime": true,
       "includeVars": false
@@ -57,7 +57,7 @@
       "gridPos": { "x": 0, "y": 0, "w": 24, "h": 4 },
       "options": {
         "mode": "html",
-        "content": "<div style=\"display:flex; align-items:center; justify-content:space-between; padding: 12px 20px; background: linear-gradient(90deg, #1a1d23 0%, #22262f 100%); border-radius: 8px; border-left: 4px solid #5794F2; height: 100%; box-sizing: border-box;\">\n  <div>\n    <div style=\"font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: 0.5px;\">Application Overview</div>\n    <div style=\"font-size: 13px; color: #8e9bb5; margin-top: 4px;\">Live snapshot across HTTP, Users, Search and Weather — updated every 30s</div>\n  </div>\n  <div style=\"display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;\">\n    <a href=\"/d/http-observability\" style=\"text-decoration:none; padding: 8px 16px; background:#1f60c4; color:#fff; border-radius:5px; font-size:13px; font-weight:600;\">⚡ HTTP</a>\n    <a href=\"/d/user-observability\" style=\"text-decoration:none; padding: 8px 16px; background:#3d6b47; color:#fff; border-radius:5px; font-size:13px; font-weight:600;\">👤 Users</a>\n    <a href=\"/d/search-observability\" style=\"text-decoration:none; padding: 8px 16px; background:#7b5ea7; color:#fff; border-radius:5px; font-size:13px; font-weight:600;\">🔍 Search</a>\n    <a href=\"/d/weather-observability\" style=\"text-decoration:none; padding: 8px 16px; background:#8c5e1e; color:#fff; border-radius:5px; font-size:13px; font-weight:600;\">🌤 Weather</a>\n  </div>\n</div>"
+        "content": "<div style=\"display:flex; align-items:center; justify-content:space-between; padding: 12px 20px; background: linear-gradient(90deg, #1a1d23 0%, #22262f 100%); border-radius: 8px; border-left: 4px solid #5794F2; height: 100%; box-sizing: border-box;\">\n  <div>\n    <div style=\"font-size: 22px; font-weight: 700; color: #ffffff; letter-spacing: 0.5px;\">Application Overview</div>\n    <div style=\"font-size: 13px; color: #8e9bb5; margin-top: 4px;\">Live snapshot across HTTP, Business, Security and Weather — updated every 30s</div>\n  </div>\n  <div style=\"display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;\">\n    <a href=\"/d/http-observability\" style=\"text-decoration:none; padding: 8px 16px; background:#1f60c4; color:#fff; border-radius:5px; font-size:13px; font-weight:600;\">HTTP</a>\n    <a href=\"/d/business-observability\" style=\"text-decoration:none; padding: 8px 16px; background:#3d6b47; color:#fff; border-radius:5px; font-size:13px; font-weight:600;\">Business</a>\n    <a href=\"/d/security-observability\" style=\"text-decoration:none; padding: 8px 16px; background:#8b3d3d; color:#fff; border-radius:5px; font-size:13px; font-weight:600;\">Security</a>\n    <a href=\"/d/weather-observability\" style=\"text-decoration:none; padding: 8px 16px; background:#8c5e1e; color:#fff; border-radius:5px; font-size:13px; font-weight:600;\">Weather</a>\n  </div>\n</div>"
       }
     },
 
@@ -68,7 +68,7 @@
       "gridPos": { "x": 0, "y": 4, "w": 24, "h": 2 },
       "options": {
         "mode": "html",
-        "content": "<div style=\"display:flex; align-items:center; gap:10px; padding: 6px 4px; height:100%; box-sizing:border-box;\">\n  <div style=\"width:4px; height:20px; background:#5794F2; border-radius:2px; flex-shrink:0;\"></div>\n  <span style=\"font-size:14px; font-weight:700; color:#5794F2; letter-spacing:1.5px; text-transform:uppercase;\">HTTP</span>\n  <div style=\"flex:1; height:1px; background:rgba(87,148,242,0.25);\"></div>\n  <a href=\"/d/http-observability\" style=\"font-size:12px; color:#5794F2; text-decoration:none; white-space:nowrap;\">View full dashboard →</a>\n</div>"
+        "content": "<div style=\"display:flex; align-items:center; gap:10px; padding: 6px 4px; height:100%; box-sizing:border-box;\">\n  <div style=\"width:4px; height:20px; background:#5794F2; border-radius:2px; flex-shrink:0;\"></div>\n  <span style=\"font-size:14px; font-weight:700; color:#5794F2; letter-spacing:1.5px; text-transform:uppercase;\">HTTP</span>\n  <div style=\"flex:1; height:1px; background:rgba(87,148,242,0.25);\"></div>\n  <a href=\"/d/http-observability\" style=\"font-size:12px; color:#5794F2; text-decoration:none; white-space:nowrap;\">View full dashboard</a>\n</div>"
       }
     },
 
@@ -129,57 +129,49 @@
       "gridPos": { "x": 0, "y": 10, "w": 24, "h": 2 },
       "options": {
         "mode": "html",
-        "content": "<div style=\"display:flex; align-items:center; gap:10px; padding: 6px 4px; height:100%; box-sizing:border-box;\">\n  <div style=\"width:4px; height:20px; background:#73BF69; border-radius:2px; flex-shrink:0;\"></div>\n  <span style=\"font-size:14px; font-weight:700; color:#73BF69; letter-spacing:1.5px; text-transform:uppercase;\">Users</span>\n  <div style=\"flex:1; height:1px; background:rgba(115,191,105,0.25);\"></div>\n  <a href=\"/d/user-observability\" style=\"font-size:12px; color:#73BF69; text-decoration:none; white-space:nowrap;\">View full dashboard →</a>\n</div>"
+        "content": "<div style=\"display:flex; align-items:center; gap:10px; padding: 6px 4px; height:100%; box-sizing:border-box;\">\n  <div style=\"width:4px; height:20px; background:#73BF69; border-radius:2px; flex-shrink:0;\"></div>\n  <span style=\"font-size:14px; font-weight:700; color:#73BF69; letter-spacing:1.5px; text-transform:uppercase;\">Business</span>\n  <div style=\"flex:1; height:1px; background:rgba(115,191,105,0.25);\"></div>\n  <a href=\"/d/business-observability\" style=\"font-size:12px; color:#73BF69; text-decoration:none; white-space:nowrap;\">View full dashboard</a>\n</div>"
       }
     },
 
     {
-      "id": 10, "type": "stat", "title": "Successful Logins (5m)",
+      "id": 10, "type": "stat", "title": "Successful Logins (1h)",
       "gridPos": { "x": 0, "y": 12, "w": 4, "h": 4 },
       "datasource": "Prometheus",
-      "targets": [{ "expr": "sum(increase(login_attempts_total{result=\"success\"}[5m]))", "legendFormat": "logins" }],
+      "targets": [{ "expr": "sum(increase(login_attempts_total{result=\"success\"}[1h]))", "legendFormat": "logins" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
       "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "fixed", "fixedColor": "#73BF69" } } }
     },
     {
-      "id": 11, "type": "stat", "title": "Failed Logins (5m)",
+      "id": 12, "type": "stat", "title": "Search Hit Rate %",
       "gridPos": { "x": 4, "y": 12, "w": 4, "h": 4 },
       "datasource": "Prometheus",
-      "targets": [{ "expr": "sum(increase(login_attempts_total{result=\"failure\"}[5m]))", "legendFormat": "failures" }],
+      "targets": [{ "expr": "100 * sum(increase(search_queries_total{hit=\"hit\"}[1h])) / sum(increase(search_queries_total[1h]))", "legendFormat": "hit %" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 20 }] } } }
+      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "noValue": "—", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 30 }, { "color": "green", "value": 60 }] } } }
     },
     {
-      "id": 12, "type": "stat", "title": "Registrations (5m)",
+      "id": 13, "type": "stat", "title": "Registrations (1h)",
       "gridPos": { "x": 8, "y": 12, "w": 4, "h": 4 },
       "datasource": "Prometheus",
-      "targets": [{ "expr": "sum(increase(registrations_total{result=\"success\"}[5m]))", "legendFormat": "registrations" }],
+      "targets": [{ "expr": "sum(increase(registrations_total{result=\"success\"}[1h]))", "legendFormat": "registrations" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
       "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "fixed", "fixedColor": "#5794F2" } } }
     },
     {
-      "id": 13, "type": "stat", "title": "Password Changes (5m)",
+      "id": 20, "type": "stat", "title": "Total Searches (1h)",
       "gridPos": { "x": 12, "y": 12, "w": 4, "h": 4 },
       "datasource": "Prometheus",
-      "targets": [{ "expr": "sum(increase(password_changes_total[5m]))", "legendFormat": "changes" }],
+      "targets": [{ "expr": "sum(increase(search_queries_total[1h]))", "legendFormat": "searches" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
       "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "fixed", "fixedColor": "#B877D9" } } }
     },
     {
-      "id": 14, "type": "timeseries", "title": "Login Success vs Failure",
+      "id": 25, "type": "stat", "title": "Top Keyword",
       "gridPos": { "x": 16, "y": 12, "w": 8, "h": 4 },
       "datasource": "Prometheus",
-      "targets": [
-        { "expr": "sum by(result) (rate(login_attempts_total[1m]))", "legendFormat": "{{result}}" }
-      ],
-      "fieldConfig": {
-        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2, "fillOpacity": 8 } },
-        "overrides": [
-          { "matcher": { "id": "byName", "options": "success" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#73BF69" } }] },
-          { "matcher": { "id": "byName", "options": "failure" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "red" } }] }
-        ]
-      },
-      "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "list", "placement": "bottom" } }
+      "targets": [{ "expr": "topk(1, sum by(keyword) (search_keyword_total))", "legendFormat": "{{keyword}}", "format": "table", "instant": true }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "short", "noValue": "—", "color": { "mode": "fixed", "fixedColor": "#73BF69" } } }
     },
 
     {
@@ -189,57 +181,49 @@
       "gridPos": { "x": 0, "y": 16, "w": 24, "h": 2 },
       "options": {
         "mode": "html",
-        "content": "<div style=\"display:flex; align-items:center; gap:10px; padding: 6px 4px; height:100%; box-sizing:border-box;\">\n  <div style=\"width:4px; height:20px; background:#B877D9; border-radius:2px; flex-shrink:0;\"></div>\n  <span style=\"font-size:14px; font-weight:700; color:#B877D9; letter-spacing:1.5px; text-transform:uppercase;\">Search</span>\n  <div style=\"flex:1; height:1px; background:rgba(184,119,217,0.25);\"></div>\n  <a href=\"/d/search-observability\" style=\"font-size:12px; color:#B877D9; text-decoration:none; white-space:nowrap;\">View full dashboard →</a>\n</div>"
+        "content": "<div style=\"display:flex; align-items:center; gap:10px; padding: 6px 4px; height:100%; box-sizing:border-box;\">\n  <div style=\"width:4px; height:20px; background:#E85D75; border-radius:2px; flex-shrink:0;\"></div>\n  <span style=\"font-size:14px; font-weight:700; color:#E85D75; letter-spacing:1.5px; text-transform:uppercase;\">Security</span>\n  <div style=\"flex:1; height:1px; background:rgba(232,93,117,0.25);\"></div>\n  <a href=\"/d/security-observability\" style=\"font-size:12px; color:#E85D75; text-decoration:none; white-space:nowrap;\">View full dashboard</a>\n</div>"
       }
     },
 
     {
-      "id": 20, "type": "stat", "title": "Searches (5m)",
+      "id": 40, "type": "stat", "title": "Failed Logins (1h)",
       "gridPos": { "x": 0, "y": 18, "w": 4, "h": 4 },
       "datasource": "Prometheus",
-      "targets": [{ "expr": "sum(increase(search_queries_total[5m]))", "legendFormat": "searches" }],
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "fixed", "fixedColor": "#B877D9" } } }
-    },
-    {
-      "id": 21, "type": "stat", "title": "Hit Rate",
-      "gridPos": { "x": 4, "y": 18, "w": 4, "h": 4 },
-      "datasource": "Prometheus",
-      "targets": [{ "expr": "100 * sum(increase(search_queries_total{hit=\"hit\"}[5m])) / sum(increase(search_queries_total[5m]))", "legendFormat": "hit %" }],
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "percent", "min": 0, "max": 100, "noValue": "—", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "red", "value": null }, { "color": "yellow", "value": 30 }, { "color": "green", "value": 60 }] } } }
-    },
-    {
-      "id": 22, "type": "stat", "title": "P95 Latency",
-      "gridPos": { "x": 8, "y": 18, "w": 4, "h": 4 },
-      "datasource": "Prometheus",
-      "targets": [{ "expr": "histogram_quantile(0.95, sum by(le) (rate(search_duration_seconds_bucket[5m])))", "legendFormat": "p95" }],
-      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
-      "fieldConfig": { "defaults": { "unit": "s", "noValue": "—", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 0.1 }, { "color": "red", "value": 0.5 }] } } }
-    },
-    {
-      "id": 23, "type": "stat", "title": "Misses (5m)",
-      "gridPos": { "x": 12, "y": 18, "w": 4, "h": 4 },
-      "datasource": "Prometheus",
-      "targets": [{ "expr": "sum(increase(search_queries_total{hit=\"miss\"}[5m]))", "legendFormat": "misses" }],
+      "targets": [{ "expr": "sum(increase(login_attempts_total{result=\"failure\"}[1h]))", "legendFormat": "failures" }],
       "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
       "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 10 }, { "color": "red", "value": 50 }] } } }
     },
     {
-      "id": 24, "type": "timeseries", "title": "Search Hit vs Miss",
+      "id": 41, "type": "stat", "title": "HTTP 401s (1h)",
+      "gridPos": { "x": 4, "y": 18, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "sum(increase(http_requests_total{status_code=\"401\"}[1h]))", "legendFormat": "401s" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 20 }] } } }
+    },
+    {
+      "id": 42, "type": "stat", "title": "HTTP 403s (1h)",
+      "gridPos": { "x": 8, "y": 18, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "sum(increase(http_requests_total{status_code=\"403\"}[1h]))", "legendFormat": "403s" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 20 }] } } }
+    },
+    {
+      "id": 43, "type": "stat", "title": "Failed Registrations (1h)",
+      "gridPos": { "x": 12, "y": 18, "w": 4, "h": 4 },
+      "datasource": "Prometheus",
+      "targets": [{ "expr": "sum(increase(registrations_total{result=\"failure\"}[1h]))", "legendFormat": "failures" }],
+      "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "none" },
+      "fieldConfig": { "defaults": { "unit": "short", "noValue": "0", "color": { "mode": "thresholds" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "yellow", "value": 5 }, { "color": "red", "value": 20 }] } } }
+    },
+    {
+      "id": 44, "type": "timeseries", "title": "Failed Login Rate",
       "gridPos": { "x": 16, "y": 18, "w": 8, "h": 4 },
       "datasource": "Prometheus",
-      "targets": [
-        { "expr": "sum by(hit) (rate(search_queries_total[1m]))", "legendFormat": "{{hit}}" }
-      ],
-      "fieldConfig": {
-        "defaults": { "unit": "reqps", "custom": { "lineWidth": 2, "fillOpacity": 8 } },
-        "overrides": [
-          { "matcher": { "id": "byName", "options": "hit" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#73BF69" } }] },
-          { "matcher": { "id": "byName", "options": "miss" }, "properties": [{ "id": "color", "value": { "mode": "fixed", "fixedColor": "#FF9830" } }] }
-        ]
-      },
-      "options": { "tooltip": { "mode": "multi" }, "legend": { "displayMode": "list", "placement": "bottom" } }
+      "targets": [{ "expr": "sum(rate(login_attempts_total{result=\"failure\"}[5m]))", "legendFormat": "Failure rate" }],
+      "fieldConfig": { "defaults": { "unit": "reqps", "custom": { "lineWidth": 2 }, "color": { "mode": "fixed", "fixedColor": "red" }, "thresholds": { "mode": "absolute", "steps": [{ "color": "green", "value": null }, { "color": "red", "value": 0.1 }] } } },
+      "options": { "tooltip": { "mode": "single" }, "legend": { "displayMode": "list", "placement": "bottom" } }
     },
 
     {
@@ -249,7 +233,7 @@
       "gridPos": { "x": 0, "y": 22, "w": 24, "h": 2 },
       "options": {
         "mode": "html",
-        "content": "<div style=\"display:flex; align-items:center; gap:10px; padding: 6px 4px; height:100%; box-sizing:border-box;\">\n  <div style=\"width:4px; height:20px; background:#FF9830; border-radius:2px; flex-shrink:0;\"></div>\n  <span style=\"font-size:14px; font-weight:700; color:#FF9830; letter-spacing:1.5px; text-transform:uppercase;\">Weather API</span>\n  <div style=\"flex:1; height:1px; background:rgba(255,152,48,0.25);\"></div>\n  <a href=\"/d/weather-observability\" style=\"font-size:12px; color:#FF9830; text-decoration:none; white-space:nowrap;\">View full dashboard →</a>\n</div>"
+        "content": "<div style=\"display:flex; align-items:center; gap:10px; padding: 6px 4px; height:100%; box-sizing:border-box;\">\n  <div style=\"width:4px; height:20px; background:#FF9830; border-radius:2px; flex-shrink:0;\"></div>\n  <span style=\"font-size:14px; font-weight:700; color:#FF9830; letter-spacing:1.5px; text-transform:uppercase;\">Weather API</span>\n  <div style=\"flex:1; height:1px; background:rgba(255,152,48,0.25);\"></div>\n  <a href=\"/d/weather-observability\" style=\"font-size:12px; color:#FF9830; text-decoration:none; white-space:nowrap;\">View full dashboard</a>\n</div>"
       }
     },
 
