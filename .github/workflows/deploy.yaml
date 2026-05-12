@@ -22,7 +22,8 @@ jobs:
             "${{ secrets.MONITORING_SERVER_USER }}@${{ secrets.MONITORING_SERVER_IP }}" <<'EOF'
           set -eux
           cd /opt/docker/devops/whoknows_monitoring
-          git pull
+          git fetch origin
+          git reset --hard origin/main
           docker compose pull
           docker compose up -d
           sleep 2
