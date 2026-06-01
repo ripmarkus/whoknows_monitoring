@@ -3,28 +3,37 @@
 GitOps-style Prometheus + Grafana stack that monitors the
 [`whoknows_ripmarkus`](../whoknows_ripmarkus) Ruby/Sinatra app.
 
-- **Monitoring server**: `65.109.162.80` — runs Prometheus + Grafana.
-- **App server**: `91.100.1.101` — runs the app (port 8080) and a
-  `node_exporter` sidecar (port 9100) deployed from this repo.
-- **GitOps loop**: every push to `main` SSHes to both servers, pulls this
+- **Monitoring server**: `vss-vm-1` (`65.109.162.80`) — runs Prometheus + Grafana.
+- **App server**: `tivieserver` (`mathiasmortensen.dk`, `91.100.1.101`) — runs the app,
+  database, and `node_exporter`, all fronted by Nginx with TLS. Deployed from
+  `whoknows_ripmarkus`, not from this repo.
+- **GitOps loop**: every push to `main` SSHes to the monitoring server, pulls this
   repo, and runs `docker compose up -d`.
+
+## Architecture Note
+
+The app server securely exposes its metrics via the Nginx reverse proxy:
+
+- `https://mathiasmortensen.dk/metrics` — proxies to the Ruby web container
+- `https://mathiasmortensen.dk/node-metrics` — proxies to the `node_exporter` container
+
+Nginx restricts access to both endpoints to the monitoring server IP
+(`allow 65.109.162.80; deny all;`), so the rest of the internet can't scrape them.
 
 ## Quick start (local)
 
-```
-cp .env.example .env         # edit GRAFANA_ADMIN_PASSWORD
+```bash
+cp .env.example .env
 docker compose up -d
 ```
 
-- Prometheus: http://localhost:9090 (targets at /targets)
+- Prometheus: http://localhost:9090 (targets at `/targets`)
 - Grafana: http://localhost:3000 (login with values from `.env`)
 
-The `ruby-app` scrape target will be `DOWN` until the prerequisite below is
-merged — expected.
+The remote scrape targets (`node-app`, `ruby-app`) will show DOWN locally — expected,
+your laptop isn't on Nginx's IP allow-list.
 
-## First-time server setup
-
-### Monitoring server (65.109.162.80)
+## First-time server setup (monitoring server)
 
 ```
 sudo mkdir -p /opt/docker/devops
@@ -36,48 +45,19 @@ cp .env.example .env
 docker compose up -d
 ```
 
-Grafana is reachable at http://65.109.162.80:3000. Prometheus is bound to
-`127.0.0.1:9090` — reach it via SSH tunnel:
-`ssh -L 9090:localhost:9090 user@65.109.162.80`.
+- Grafana: http://65.109.162.80:3000
+- Prometheus: http://65.109.162.80:9090
 
-### App server (91.100.1.101)
-
-```
-sudo mkdir -p /opt/docker/devops
-cd /opt/docker/devops
-git clone <this-repo-url> whoknows_monitoring
-cd whoknows_monitoring/exporters
-docker compose -f compose.exporters.yaml up -d
-```
-
-Firewall: restrict port 9100 to the monitoring server's IP.
-
-```
-sudo ufw allow from 65.109.162.80 to any port 9100 proto tcp
-```
+No setup needed on the app server — `node_exporter` ships with the app from
+`whoknows_ripmarkus`'s own CD, and Nginx on `tivieserver` handles access control.
 
 ## GitHub Secrets
 
-| Secret                   | What                                                  |
-|--------------------------|-------------------------------------------------------|
-| `SSH_KEY`                | Private key authorised on both servers                |
-| `MONITORING_SERVER_USER` | SSH user on monitoring server (e.g. `vss`)            |
-| `MONITORING_SERVER_IP`   | `65.109.162.80` (SSH port 2806, hardcoded in workflow)|
-| `APP_SERVER_USER`        | SSH user on app server (e.g. `riphjalte`)             |
-| `APP_SERVER_IP`          | `91.100.1.101`                                        |
-
-## Prerequisite: app `/metrics` endpoint
-
-The `ruby-app` scrape target in `prometheus/prometheus.yml` points at
-`91.100.1.101:8080/metrics`, which does not exist yet. A follow-up PR on
-`whoknows_ripmarkus` needs to:
-
-1. Add `gem "prometheus-client"` to the Gemfile.
-2. Mount `Prometheus::Client::Rack::Exporter` as Rack middleware in
-   `app.rb` so `GET /metrics` returns Prometheus text format.
-
-Once that merges, `up{job="ruby-app"}` flips to `1` automatically — no
-change needed in this repo. That is the GitOps loop working as intended.
+| Secret                   | What                                            |
+| ------------------------ | ----------------------------------------------- |
+| `SSH_KEY`                | Private key authorised on the monitoring server |
+| `MONITORING_SERVER_USER` | SSH user on the monitoring server               |
+| `MONITORING_SERVER_IP`   | `65.109.162.80`                                 |
 
 ## Layout
 
@@ -85,7 +65,6 @@ change needed in this repo. That is the GitOps loop working as intended.
 compose.yaml                         Monitoring stack (prometheus + grafana)
 prometheus/prometheus.yml            Scrape jobs
 grafana/provisioning/                Datasource + dashboard auto-loading
-exporters/compose.exporters.yaml     node_exporter for the app server
 .github/workflows/deploy.yaml        SSH deploy on push to main
 ```
 
