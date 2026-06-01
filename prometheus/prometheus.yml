@@ -3,17 +3,21 @@ global:
   evaluation_interval: 30s
 
 scrape_configs:
-  - job_name: 'whoknows-app'
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'node-app'
     scheme: https
-    metrics_path: /metrics
+    metrics_path: /node-metrics
     static_configs:
       - targets: ['mathiasmortensen.dk']
         labels:
           instance: 'tivieserver'
 
-  - job_name: 'node-exporter'
+  - job_name: 'ruby-app'
     scheme: https
-    metrics_path: /node-metrics
+    metrics_path: /metrics
     static_configs:
       - targets: ['mathiasmortensen.dk']
         labels:
